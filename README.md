@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+# User Management Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+The User Management Application is a CRUD (Create, Read, Update, Delete) application built with React that allows users to manage user information efficiently. It uses the JSONPlaceholder API to simulate data fetching, creating, updating, and deleting user data.
 
-In the project directory, you can run:
+## Table of Contents
 
-### `npm start`
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Additional Requirements](#additional-requirements)
+- [Contributing](#contributing)
+- [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Fetch Users**: Retrieve a list of users from the JSONPlaceholder API and display them in a table format.
+- **Create User**: A form to create a new user with validation. Users can be added via a modal.
+- **Update User**: Users can edit existing user information, with pre-filled data in the modal for easy modification.
+- **Delete User**: Remove a user with a confirmation modal to prevent accidental deletions.
+- **Responsive Design**: The application is designed to be mobile-friendly and adjusts to different screen sizes.
 
-### `npm test`
+## Technologies Used
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React**: A JavaScript library for building user interfaces.
+- **Axios**: A promise-based HTTP client for making requests to the JSONPlaceholder API.
+- **Material-UI**: A React UI framework that provides components for building responsive web applications.
+- **React Router**: For routing and navigating between views.
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ritik177/User-Management-App.git
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Navigate to the project directory:
+  ```bash
+   cd user-management-app
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Install dependencies:
+   ```bash
+    npm install
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
+1. Start the development server
+   ```bash
+   npm start
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Open your browser and navigate to http://localhost:3000 to view the application.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## API Endpoints
+1. Fetch Users:
+    GET https://jsonplaceholder.typicode.com/users
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+2. Create User:
+    POST https://jsonplaceholder.typicode.com/users
 
-## Learn More
+3. Update User:
+   PUT https://jsonplaceholder.typicode.com/users/{id}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Delete User:
+   DELETE https://jsonplaceholder.typicode.com/users/{id}
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Additional Requirements
+# Table UI: 
+    The application features a table with alternating row colors for better readability.
+# React Functional Components & Hooks: 
+    Utilizes React functional components and hooks (useState, useEffect, etc.) for state management and lifecycle methods.
+#  Routing using React Router:
+    Implements routing for home view and detailed user view.
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Contributing
+   Contributions are welcome! If you have suggestions or improvements, please create a pull request or open an issue.
