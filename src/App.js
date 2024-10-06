@@ -7,7 +7,7 @@ import './App.css';
 function App() {
   return (
     <>
-      <nav className="bg-blue-500 p-4 shadow-lg">
+      <nav className="bg-blue-400 p-4 shadow-lg">
         <div className="max-w-7xl mx-auto">
           <Link to="/" className="text-white text-xl font-semibold hover:text-gray-200">
             Home

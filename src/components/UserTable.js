@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UserForm from "./UserForm";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = "https://jsonplaceholder.typicode.com/users";
@@ -27,42 +27,38 @@ function UserTable() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUsers(); // Fetch users from the API on component mount
+    fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
-
     try {
       const response = await axios.get(API_URL);
       const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-      // Create a Set for unique user IDs
       const userIds = new Set();
 
-      // Combine users from the API and local storage
       const allUsers = [
         ...response.data.filter((user) => {
           if (!userIds.has(user.id)) {
             userIds.add(user.id);
-            return true; // Keep this user
+            return true;
           }
-          return false; // Skip this user as it's a duplicate
+          return false;
         }),
         ...storedUsers.filter((user) => {
           if (!userIds.has(user.id)) {
             userIds.add(user.id);
-            return true; // Keep this user
+            return true;
           }
-          return false; // Skip this user as it's a duplicate
+          return false;
         }),
       ];
 
-      setUsers(allUsers); // Set users after data is fetched
+      setUsers(allUsers);
     } catch (error) {
       setError("Error fetching users. Please try again later.");
     } finally {
@@ -72,11 +68,9 @@ function UserTable() {
 
   const handleCreateUser = async (newUser) => {
     try {
-      const maxId =
-        users.length > 0 ? Math.max(...users.map((user) => user.id)) : 0;
+      const maxId = users.length > 0 ? Math.max(...users.map((user) => user.id)) : 0;
       const newUserWithId = { ...newUser, id: maxId + 1 };
 
-      // Simulate a post request
       await axios.post(API_URL, newUserWithId);
 
       const updatedUsers = [...users, newUserWithId];
@@ -116,27 +110,35 @@ function UserTable() {
     }
   };
 
-  const handleDeleteUser = (id) => {
+  const handleDeleteUser = async (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      const updatedUsers = users.filter((user) => user.id !== id);
-      renumberUserIds(updatedUsers); // Renumber IDs after deletion
-      toast.success("User deleted successfully!");
+      try {
+        // Optional: Remove from API if needed
+        await axios.delete(`${API_URL}/${id}`);
+        
+        const updatedUsers = users.filter((user) => user.id !== id);
+        renumberUserIds(updatedUsers);
+        toast.success("User deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        setError("Error deleting user. Please try again.");
+        toast.error("Error deleting user. Please try again.");
+      }
     }
   };
 
   const renumberUserIds = (updatedUsers) => {
     const renumberedUsers = updatedUsers.map((user, index) => ({
       ...user,
-      id: index + 1, // Renumbering starts from 1
+      id: index + 1,
     }));
 
-    // Set state and local storage with renumbered users
     setUsers(renumberedUsers);
-    localStorage.setItem("users", JSON.stringify(renumberedUsers)); // Update local storage with new IDs
+    localStorage.setItem("users", JSON.stringify(renumberedUsers));
   };
 
   const handleViewUser = (user) => {
-    navigate(`/users/${user.id}`); // Navigate to UserDetail with the user's ID
+    navigate(`/users/${user.id}`);
   };
 
   const filteredUsers = users.filter((user) =>
@@ -160,7 +162,7 @@ function UserTable() {
         <input
           type="text"
           placeholder="Search by name..."
-          className="border border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md p-2 w-full md:w-1/3"
+          className="border border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md p-2 w-full md:w-1/3 sm:w-1/2"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -212,36 +214,37 @@ function UserTable() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id} className="border-b hover:bg-gray-100">
-                <td className="py-3 px-6">{user.id}</td>
-                <td className="py-3 px-6">{user.name}</td>
-                <td className="py-3 px-6">{user.email}</td>
-                <td className="py-3 px-6">{user.phone}</td>
-                <td className="py-3 px-6">
-                  <button
-                    onClick={() => handleViewUser(user)} // Update to call handleViewUser
-                    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300"
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleEditUser(user)}
-                    className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition duration-300 ml-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteUser(user.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ml-2"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+   <tbody>
+  {users.map((user, index) => (
+    <tr key={user.id} className={`border-b ${index % 2 === 0 ? 'bg-teal-300 text-black' : 'bg-cyan-200 text-black'} hover:bg-gray-200`}>
+      <td className="py-3 px-6">{user.id}</td>
+      <td className="py-3 px-6">{user.name}</td>
+      <td className="py-3 px-6">{user.email}</td>
+      <td className="py-3 px-6">{user.phone}</td>
+      <td className="py-3 px-6">
+        <button
+          onClick={() => handleViewUser(user)}
+          className="bg-blue-500 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-blue-600 transition duration-300"
+        >
+          View
+        </button>
+        <button
+          onClick={() => handleEditUser(user)}
+          className="bg-yellow-500 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-yellow-600 transition duration-300 ml-1 md:ml-2"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDeleteUser(user.id)}
+          className="bg-red-700 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-red-800 transition duration-300 ml-1 md:ml-2"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       </div>
       <ToastContainer />

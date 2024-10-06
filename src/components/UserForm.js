@@ -45,11 +45,9 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
     });
   };
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Handle nested objects like address and company
     if (name.includes('address.') || name.includes('company.')) {
       const [section, field] = name.split('.');
       setUser((prevUser) => ({
@@ -66,14 +64,12 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
       }));
     }
 
-    // Clear validation errors
     setValidationErrors((prevErrors) => ({
       ...prevErrors,
       [name]: '',
     }));
   };
 
-  // Validate form inputs
   const validateForm = () => {
     const errors = {};
     if (!user.name || user.name.length < 3) errors.name = 'Name is required and must be at least 3 characters.';
@@ -88,7 +84,6 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
     return errors;
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -98,17 +93,16 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
       return;
     }
 
-    // Call the appropriate function based on editing mode
     if (isEditing) {
       onUpdateUser(user);
     } else {
       onCreateUser(user);
     }
-    resetForm(); // Reset the form after submission
+    resetForm();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-lg mx-auto">
+    <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-lg mx-auto sm:px-6 md:px-12 lg:px-16 xl:px-20">
       <h3 className="text-2xl font-bold mb-4">{isEditing ? 'Edit User' : 'Create User'}</h3>
 
       {/* Name Input */}
@@ -161,7 +155,7 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
           type="text"
           name="username"
           value={user.username}
-          readOnly // Make it non-editable
+          readOnly
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
@@ -232,7 +226,7 @@ function UserForm({ isEditing, editingUser, onCreateUser, onUpdateUser, onCancel
           type="submit"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
-          {isEditing ? 'Update User' : 'Create User'}
+          {isEditing ? 'Update' : 'Create'}
         </button>
       </div>
     </form>
