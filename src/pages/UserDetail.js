@@ -12,26 +12,36 @@ function UserDetail() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.get(`${API_URL}/${id}`);
-        if (response.status === 200) {
-          setUser(response.data);
+    const storedUser = JSON.parse(localStorage.getItem("viewUser")); 
+    console.log("Stored User:", storedUser); // Check what’s retrieved from localStorage
+    console.log("ID from URL:", id); // Log the ID from the URL
+  
+    if (storedUser && storedUser.id === parseInt(id)) {
+      setUser(storedUser); // Set user state if the IDs match
+      setLoading(false); // Ensure loading is set to false
+    } else {
+      const fetchUser = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          const response = await axios.get(`${API_URL}/${id}`);
+          if (response.status === 200) {
+            setUser(response.data);
+          }
+        } catch (error) {
+          if (error.response && error.response.status === 404) {
+            setError("User not found. Please check the user ID.");
+          } else {
+            setError("Error fetching user details. Please try again later.");
+          }
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          setError("User not found. Please check the user ID.");
-        } else {
-          setError("Error fetching user details. Please try again later.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
+      };
+      fetchUser();
+    }
   }, [id]);
+  
 
   if (loading) return <div className="text-center">Loading...</div>;
   if (error) return <div className="text-red-600 text-center">{error}</div>;
@@ -39,11 +49,9 @@ function UserDetail() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-4xl font-bold mb-6 text-center text-indigo-400">
-        User Details
-      </h1>
+      <h1 className="text-4xl font-bold mb-6 text-center text-indigo-700">User Details</h1>
       <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="bg-indigo-400 text-white text-center py-4">
+        <div className="bg-indigo-600 text-white text-center py-4">
           <img
             src={`https://i.pravatar.cc/150?img=${id}`}
             alt={`${user.name}'s avatar`}
@@ -69,7 +77,6 @@ function UserDetail() {
               </a>
             </span>
           </div>
-          {/* Address Section */}
           {user.address && (
             <div className="flex items-center my-3">
               <FaMapMarkerAlt className="text-indigo-500 mr-3" />
@@ -78,7 +85,6 @@ function UserDetail() {
               </span>
             </div>
           )}
-          {/* Company Section */}
           {user.company && (
             <div className="flex items-center my-3">
               <FaBuilding className="text-indigo-500 mr-3" />
@@ -91,13 +97,14 @@ function UserDetail() {
         <div className="bg-gray-100 text-center py-4">
           <button
             onClick={() => window.history.back()}
-            className="bg-indigo-600 text-white py-2 px-6 rounded hover:bg-indigo-500 transition duration-300"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300"
           >
-            Back to Users
+            Go Back
           </button>
         </div>
       </div>
     </div>
   );
 }
+
 export default UserDetail;

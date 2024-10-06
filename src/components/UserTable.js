@@ -10,7 +10,7 @@ const API_URL = "https://jsonplaceholder.typicode.com/users";
 function LoadingSpinner() {
   return (
     <div className="flex justify-center items-center my-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
     </div>
   );
 }
@@ -36,11 +36,12 @@ function UserTable() {
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
+
     try {
       const response = await axios.get(API_URL);
       const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-      const userIds = new Set();
 
+      const userIds = new Set();
       const allUsers = [
         ...response.data.filter((user) => {
           if (!userIds.has(user.id)) {
@@ -61,6 +62,7 @@ function UserTable() {
       setUsers(allUsers);
     } catch (error) {
       setError("Error fetching users. Please try again later.");
+      toast.error("Error fetching users. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -68,11 +70,11 @@ function UserTable() {
 
   const handleCreateUser = async (newUser) => {
     try {
-      const maxId = users.length > 0 ? Math.max(...users.map((user) => user.id)) : 0;
+      const maxId =
+        users.length > 0 ? Math.max(...users.map((user) => user.id)) : 0;
       const newUserWithId = { ...newUser, id: maxId + 1 };
 
       await axios.post(API_URL, newUserWithId);
-
       const updatedUsers = [...users, newUserWithId];
       setUsers(updatedUsers);
       localStorage.setItem("users", JSON.stringify(updatedUsers));
@@ -94,9 +96,11 @@ function UserTable() {
   const handleUpdateUser = async (updatedUser) => {
     try {
       await axios.put(`${API_URL}/${updatedUser.id}`, updatedUser);
+
       const updatedUsers = users.map((user) =>
         user.id === updatedUser.id ? updatedUser : user
       );
+
       setUsers(updatedUsers);
       localStorage.setItem("users", JSON.stringify(updatedUsers));
       setIsEditing(false);
@@ -104,26 +108,15 @@ function UserTable() {
       setShowForm(false);
       toast.success("User updated successfully!");
     } catch (error) {
-      console.error("Error updating user:", error);
-      setError("Error updating user. Please try again.");
       toast.error("Error updating user. Please try again.");
     }
   };
 
-  const handleDeleteUser = async (id) => {
+  const handleDeleteUser = (id) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        // Optional: Remove from API if needed
-        await axios.delete(`${API_URL}/${id}`);
-        
-        const updatedUsers = users.filter((user) => user.id !== id);
-        renumberUserIds(updatedUsers);
-        toast.success("User deleted successfully!");
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        setError("Error deleting user. Please try again.");
-        toast.error("Error deleting user. Please try again.");
-      }
+      const updatedUsers = users.filter((user) => user.id !== id);
+      renumberUserIds(updatedUsers);
+      toast.success("User deleted successfully!");
     }
   };
 
@@ -138,6 +131,7 @@ function UserTable() {
   };
 
   const handleViewUser = (user) => {
+    localStorage.setItem("viewUser", JSON.stringify(user));
     navigate(`/users/${user.id}`);
   };
 
@@ -151,7 +145,7 @@ function UserTable() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-600">
+      <h1 className="text-4xl font-bold mb-6 text-center text-blue-400">
         User Management
       </h1>
 
@@ -162,7 +156,7 @@ function UserTable() {
         <input
           type="text"
           placeholder="Search by name..."
-          className="border border-indigo-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md p-2 w-full md:w-1/3 sm:w-1/2"
+          className="border border-blue-300 focus:border-blue-400 focus:ring-blue-500 rounded-md p-2 w-full md:w-1/3"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -177,7 +171,7 @@ function UserTable() {
       <div className="mb-4 flex justify-center">
         <button
           onClick={() => setShowForm(true)}
-          className="bg-indigo-500 text-white px-6 py-2 rounded-md hover:bg-indigo-600 transition duration-300 shadow-md"
+          className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-300 transition duration-300 shadow-md"
         >
           Create New User
         </button>
@@ -194,57 +188,65 @@ function UserTable() {
       )}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+        <table className="min-w-full border-collapse border border-gray-200">
           <thead>
-            <tr className="bg-indigo-100 text-left">
-              <th className="py-3 px-6 text-xs font-semibold text-indigo-700 uppercase">
-                ID
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold text-indigo-700 uppercase">
+            <tr className="bg-gray-200">
+              <th className="border border-gray-300 px-2 py-2 text-left">ID</th>
+              <th className="border border-gray-300 px-2 py-2 text-left">
                 Name
               </th>
-              <th className="py-3 px-6 text-xs font-semibold text-indigo-700 uppercase">
+              <th className="border border-gray-300 px-2 py-2 text-left">
                 Email
               </th>
-              <th className="py-3 px-6 text-xs font-semibold text-indigo-700 uppercase">
+              <th className="border border-gray-300 px-2 py-2 text-left">
                 Phone
               </th>
-              <th className="py-3 px-6 text-xs font-semibold text-indigo-700 uppercase">
+              <th className="border border-gray-300 px-2 py-2 text-left">
                 Actions
               </th>
             </tr>
           </thead>
-   <tbody>
-  {users.map((user, index) => (
-    <tr key={user.id} className={`border-b ${index % 2 === 0 ? 'bg-teal-300 text-black' : 'bg-cyan-200 text-black'} hover:bg-gray-200`}>
-      <td className="py-3 px-6">{user.id}</td>
-      <td className="py-3 px-6">{user.name}</td>
-      <td className="py-3 px-6">{user.email}</td>
-      <td className="py-3 px-6">{user.phone}</td>
-      <td className="py-3 px-6">
-        <button
-          onClick={() => handleViewUser(user)}
-          className="bg-blue-500 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-blue-600 transition duration-300"
-        >
-          View
-        </button>
-        <button
-          onClick={() => handleEditUser(user)}
-          className="bg-yellow-500 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-yellow-600 transition duration-300 ml-1 md:ml-2"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => handleDeleteUser(user.id)}
-          className="bg-red-700 text-white px-2 py-1 md:px-4 md:py-2 rounded-md hover:bg-red-800 transition duration-300 ml-1 md:ml-2"
-        >
-          Delete
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+          <tbody>
+            {filteredUsers.map((user, index) => (
+              <tr
+                key={user.id}
+                className={`hover:bg-gray-100 transition ${
+                  index % 2 === 0 ? "bg-blue-100" : "bg-white" // Change colors here
+                }`}
+              >
+                <td className="border border-gray-300 px-2 py-2">{user.id}</td>
+                <td className="border border-gray-300 px-2 py-2">
+                  {user.name}
+                </td>
+                <td className="border border-gray-300 px-2 py-2">
+                  {user.email}
+                </td>
+                <td className="border border-gray-300 px-2 py-2">
+                  {user.phone}
+                </td>
+                <td className="border border-gray-300 px-2 py-2 flex space-x-2">
+                  <button
+                    onClick={() => handleViewUser(user)}
+                    className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition duration-300"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleEditUser(user)}
+                    className="bg-yellow-600 text-white px-3 py-1 rounded-md hover:bg-yellow-700 transition duration-300"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteUser(user.id)}
+                    className="bg-red-600 text-white px-3 py-1 rounded-md hover:bg-red-700 transition duration-300"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
       <ToastContainer />

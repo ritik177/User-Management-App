@@ -38,7 +38,7 @@ The User Management Application is a CRUD (Create, Read, Update, Delete) applica
 
 2. Navigate to the project directory:
    ```bash
-   cd user-management-app
+   cd User-Management-App
 
 3. Install dependencies:
    ```bash
