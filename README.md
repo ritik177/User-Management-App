@@ -37,7 +37,7 @@ The User Management Application is a CRUD (Create, Read, Update, Delete) applica
    git clone https://github.com/ritik177/User-Management-App.git
 
 2. Navigate to the project directory:
-  ```bash
+   ```bash
    cd user-management-app
 
 3. Install dependencies:
@@ -46,6 +46,7 @@ The User Management Application is a CRUD (Create, Read, Update, Delete) applica
 
 
 ## Usage
+
 1. Start the development server
    ```bash
    npm start
